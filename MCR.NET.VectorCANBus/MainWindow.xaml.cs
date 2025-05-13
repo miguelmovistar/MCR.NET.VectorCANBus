@@ -17,6 +17,8 @@ namespace MCR.NET.VectorCANBus
     public partial class MainWindow : Window
     {
         Thread thread;
+        bool detener = false;
+        int consec = 0;
 
         public MainWindow()
         {
@@ -25,8 +27,9 @@ namespace MCR.NET.VectorCANBus
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
+            detener = false;
             thread = new Thread(MuestraFilas);
-            thread.IsBackground = true;
+            thread.IsBackground = true; // Ejecución del hilo en segundo plano
             thread.Start();
         }
 
@@ -34,16 +37,18 @@ namespace MCR.NET.VectorCANBus
         {
             List<customer> customers = new List<customer>();
             customer customer = new customer();
-
-            for (int i = 0; i < 500000; i++) 
+            
+            while (!detener) 
             {
-                Thread.Sleep(1000);
+                
+                Thread.Sleep(50);
                 customer.Name = "Nombre";
-                customer.Edad = i.ToString();
+                customer.Edad = consec.ToString();
 
                 customers.Add(customer);
+                consec++;
 
-                this.Dispatcher.Invoke(() => { 
+                this.Dispatcher.Invoke(() => {
                     dtgListado.ItemsSource = customers.ToList();
                 });
             }
@@ -51,7 +56,9 @@ namespace MCR.NET.VectorCANBus
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
-            thread.Abort();
+            //thread.Abort();
+            //thread.Join();
+            detener = true;
         }
     }
 }
