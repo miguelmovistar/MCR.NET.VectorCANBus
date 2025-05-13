@@ -56,8 +56,6 @@ namespace MCR.NET.VectorCANBus
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
-            //thread.Abort();
-            //thread.Join();
             detener = true;
         }
     }
