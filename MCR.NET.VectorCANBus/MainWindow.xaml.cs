@@ -61,9 +61,7 @@ namespace MCR.NET.VectorCANBus
             InitializeComponent();
         }
 
-       
-
-        private void btnStart_Click(object sender, RoutedEventArgs e)
+        public void Inicializa() 
         {
             // Vector
             XLDefine.XL_Status status;
@@ -80,7 +78,7 @@ namespace MCR.NET.VectorCANBus
             accessMask = txMask | rxMask;
             permissionMask = accessMask;
             status = CANDemo.XL_OpenPort(ref portHandle, "xlCANdemoNET", accessMask, ref permissionMask, 1024, XLDefine.XL_InterfaceVersion.XL_INTERFACE_VERSION, XLDefine.XL_BusTypes.XL_BUS_TYPE_CAN);
-            
+
             status = CANDemo.XL_CanRequestChipState(portHandle, accessMask);
             status = CANDemo.XL_ActivateChannel(portHandle, accessMask, XLDefine.XL_BusTypes.XL_BUS_TYPE_CAN, XLDefine.XL_AC_Flags.XL_ACTIVATE_NONE);
             int tempInt = -1;
@@ -88,6 +86,13 @@ namespace MCR.NET.VectorCANBus
             xlEvWaitHandle.SafeWaitHandle = new SafeWaitHandle(new IntPtr(tempInt), true);
 
             status = CANDemo.XL_ResetClock(portHandle);
+        }
+
+        private void btnStart_Click(object sender, RoutedEventArgs e)
+        {
+            detener = false;
+            Inicializa();
+            
             //rxThread = new Thread(new ThreadStart(RXThread));
             rxThread = new Thread(() => RXThread(lblMensaje));
             rxThread.Start();
@@ -127,18 +132,15 @@ namespace MCR.NET.VectorCANBus
                             xlStatus != XLDefine.XL_Status.XL_ERROR &
                             xlStatus != XLDefine.XL_Status.XL_ERR_INVALID_ACCESS &
                             xlStatus != XLDefine.XL_Status.XL_ERR_INVALID_PORT &
-                            overrun_flag != true)
+                            overrun_flag != true &
+                            detener != true)
                     {
                         xlStatus = CANDemo.XL_Receive(port_handle, ref xl_EventCAN_receivedEvent);
 
                         if (xlStatus == XLDefine.XL_Status.XL_SUCCESS)
                         {
-                            //string mensaje = CANDemo.XL_GetEventString(xl_EventCAN_receivedEvent);
-                            //string[] mensajes = mensaje.Split(' ');
-                            //Debug.WriteLine(CANDemo.XL_GetEventString(xl_EventCAN_receivedEvent));
                             PintaFilaGrid(CANDemo.XL_GetEventString(xl_EventCAN_receivedEvent));
-                            //lblMensaje.Content = CANDemo.XL_GetEventString(xl_EventCAN_receivedEvent);
-                            Thread.Sleep(10);
+                            Thread.Sleep(100);
 
                             if (xl_EventCAN_receivedEvent != null)
                             {
