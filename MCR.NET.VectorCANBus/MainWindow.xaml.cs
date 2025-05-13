@@ -106,7 +106,7 @@ namespace MCR.NET.VectorCANBus
             //thread.Start();
         }
 
-        public static void RXThread(Label lblMensaje)
+        public void RXThread(Label lblMensaje)
         {
             CANDemo.XL_CanSetReceiveMode(port_handle, 1, 0);
             status = CANDemo.XL_SetNotification(port_handle, ref event_handle, 1);
@@ -133,7 +133,10 @@ namespace MCR.NET.VectorCANBus
 
                         if (xlStatus == XLDefine.XL_Status.XL_SUCCESS)
                         {
-                            Debug.WriteLine(CANDemo.XL_GetEventString(xl_EventCAN_receivedEvent));
+                            //string mensaje = CANDemo.XL_GetEventString(xl_EventCAN_receivedEvent);
+                            //string[] mensajes = mensaje.Split(' ');
+                            //Debug.WriteLine(CANDemo.XL_GetEventString(xl_EventCAN_receivedEvent));
+                            PintaFilaGrid(CANDemo.XL_GetEventString(xl_EventCAN_receivedEvent));
                             //lblMensaje.Content = CANDemo.XL_GetEventString(xl_EventCAN_receivedEvent);
                             Thread.Sleep(10);
 
@@ -214,6 +217,19 @@ namespace MCR.NET.VectorCANBus
                     dtgListado.ItemsSource = customers.ToList();
                 });
             }
+        }
+
+        private void PintaFilaGrid(string lblMensaje)
+        {
+            List<customer> customers = new List<customer>();
+            customer customer = new customer();
+            customer.Name = "Nombre";
+            customer.Edad = lblMensaje;
+            customers.Add(customer);
+
+            this.Dispatcher.Invoke(() => {
+                dtgListado.ItemsSource = customers.ToList();
+            });
         }
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
