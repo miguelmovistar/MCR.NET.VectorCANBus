@@ -17,9 +17,8 @@
             <ColumnDefinition Width="300"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <DataGrid x:Name="dtgListado" Grid.Row="0" Grid.Column="0">
-            
-        </DataGrid>
+        <DataGrid x:Name="dtgListado" Grid.Row="0" Grid.Column="0"></DataGrid>
+        <Label Grid.Row="0" Grid.Column="1" Content="Nada..." x:Name="lblMensaje"></Label>
         <Button x:Name="btnStart" Grid.Row="1" Grid.Column="0" Content="Start" Click="btnStart_Click"></Button>
         <Button x:Name="btnStop" Grid.Row="1" Grid.Column="1" Content="Stop" Click="btnStop_Click"></Button>
     </Grid>

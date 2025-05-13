@@ -8,4 +8,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="vxlapi_NET">
+      <HintPath>..\..\..\..\..\Public\Documents\Vector\XL Driver Library 24.40.32\bin\vxlapi_NET.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
